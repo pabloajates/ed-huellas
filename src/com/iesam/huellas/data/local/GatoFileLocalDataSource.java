@@ -2,7 +2,7 @@ package com.iesam.huellas.data.local;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.iesam.huellas.domain.Cat;
+import com.iesam.huellas.domain.models.Gato;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,46 +14,46 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class CatFileLocalDataSource {
+public class GatoFileLocalDataSource implements GatoLocalDataSource{
 
-    private static CatFileLocalDataSource instance = null;
+    private static GatoFileLocalDataSource instance = null;
 
     private String nameFile = "cats.txt";
 
     private Gson gson = new Gson();
 
-    private final Type typeAlumnList = new TypeToken<ArrayList<Cat>>() {
+    private final Type typeAlumnList = new TypeToken<ArrayList<Gato>>() {
     }.getType();
 
-    private CatFileLocalDataSource() {
+    private GatoFileLocalDataSource() {
     }
 
-    public void save(Cat cat) {
-        List<Cat> cats = findAll();
+    public void save(Gato cat) {
+        List<Gato> cats = findAll();
         cats.add(cat);
         saveToFile(cats);
     }
 
-    public void saveList(List<Cat> cats) {
+    public void saveList(List<Gato> cats) {
         saveToFile(cats);
     }
 
-    private void saveToFile(List<Cat> cats) {
+    private void saveToFile(List<Gato> cats) {
         try {
             FileWriter myWriter = new FileWriter(nameFile);
             myWriter.write(gson.toJson(cats));
             myWriter.close();
             System.out.println("Datos guardados correctamente");
         } catch (IOException e) {
-            System.out.println("Ha ocurrido un error al guardar la información.");
+            System.out.println("Ha ocurrido un error al guardar la informaciÃ³n.");
             e.printStackTrace();
         }
     }
 
 
-    public Cat findById(Integer catId) {
-        List<Cat> cats = findAll();
-        for (Cat cat : cats) {
+    public Gato findById(Integer catId) {
+        List<Gato> cats = findAll();
+        for (Gato cat : cats) {
             if (Objects.equals(cat.getId(), catId)) {
                 return cat;
             }
@@ -61,7 +61,7 @@ public class CatFileLocalDataSource {
         return null;
     }
 
-    public List<Cat> findAll() {
+    public List<Gato> findAll() {
         try {
             File myObj = new File(nameFile);
             Scanner myReader = new Scanner(myObj);
@@ -75,12 +75,17 @@ public class CatFileLocalDataSource {
             System.out.println("Ha ocurrido un error al obtener el listado.");
             e.printStackTrace();
         }
-        return new ArrayList<Cat>();
+        return new ArrayList<Gato>();
     }
 
-    public static CatFileLocalDataSource getInstance() {
+    @Override
+    public void delete(Integer catId) {
+
+    }
+
+    public static GatoFileLocalDataSource getInstance() {
         if (instance == null) {
-            instance = new CatFileLocalDataSource();
+            instance = new GatoFileLocalDataSource();
         }
         return instance;
     }
